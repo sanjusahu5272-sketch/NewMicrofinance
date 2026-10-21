@@ -1,0 +1,6 @@
+V80 SOURCE CHECKS
+- ZIP integrity: checked after packaging.
+- Python AST syntax checks passed for models, serializers, views, urls, migration and tests.
+- Added Django tests: NOT RUN (runtime dependencies/environment not verified).
+- Frontend production build and browser tests: NOT RUN.
+- Real transaction reconciliation and full approval lifecycle: NOT completed.

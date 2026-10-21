@@ -1,0 +1,6 @@
+V78 SOURCE / ARCHIVE CHECKS
+- ZIP integrity checked after packaging.
+- Accounts navigation includes requested financial entries.
+- Trial balance view aggregates loaded journal lines by account using numeric sums for display only.
+- FY date scoping, branch scope, opening balance posting, ACGroup hierarchy and complete P&L not implemented in this increment.
+- Frontend build/Django tests/browser screenshots NOT RUN.

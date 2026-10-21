@@ -1,0 +1,14 @@
+V86 SOURCE/STATIC CHECK RESULTS
+- Source ZIP integrity before edits: PASSED.
+- Python AST syntax checks after edits: PASSED (42 Python files).
+- Explicit source assertion: PaymentViewSet.perform_create no longer references undefined local auto_approve: PASSED.
+- Explicit source assertion: aggregate balance query no longer chains select_for_update: PASSED.
+- Explicit source assertion: reversal query scopes journal rows by payment receipt marker and validates balanced totals: PASSED.
+- Explicit source assertion: disbursement rejects a reused journal reference before state mutation: PASSED.
+- Explicit source assertion: journal batch requires unique voucher reference: PASSED.
+- Regression tests added to backend/finance/tests.py: 3.
+- Django test suite: NOT RUN (Django/DRF packages unavailable; package index/network resolution unavailable).
+- PostgreSQL integration/concurrency tests: NOT RUN.
+- Frontend build/browser test: NOT RUN.
+- Known remaining risk: legacy single-line `/api/journal/` create path can leave an unbalanced ledger if used directly; its UI was not redesigned in this release.
+- Production readiness: NOT CERTIFIED. Do not process real-money transactions based solely on this package.

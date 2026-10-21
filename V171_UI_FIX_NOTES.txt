@@ -1,0 +1,12 @@
+V171 Loan Plan UI correction
+
+Fix: removes the unwanted vertical scrollbar from the Loan Plan table area and prevents the Task dropdown from being clipped by the table wrapper. Keeps the existing 9 columns, row data, modal fields, backend, and database logic unchanged. Docker frontend host port set to 5174 to avoid conflict with an existing NMFA instance on 5173.
+
+After extracting, copy your existing valid .env and backend/.env files into the corresponding project folders. Do not use demo credentials for real-money production.
+
+From the project root:
+  docker compose config --quiet
+  docker compose up -d --build frontend
+  docker compose ps
+
+Open http://localhost:5174

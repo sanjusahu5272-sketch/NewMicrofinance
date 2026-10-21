@@ -1,0 +1,7 @@
+V76 SOURCE / ARCHIVE CHECKS
+- ZIP integrity: checked after packaging.
+- Source assertions: Permission List role/account selector present; permission matrix is conditionally shown; account-creation fields hidden in Permission List mode; Save Permission button uses existing form PATCH flow.
+- Runtime frontend build: NOT RUN.
+- Django/API tests: NOT RUN.
+- Screenshot comparison: NOT RUN.
+- Custom role CRUD remains outstanding because current backend uses fixed StaffProfile role choices and has no standalone Role model/API.

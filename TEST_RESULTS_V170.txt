@@ -1,0 +1,5 @@
+V170 UI PATCH TEST NOTES
+- Confirmed LoanPlanMaster source contains all nine reference table headings.
+- Confirmed search input, search icon button, Task dropdown, and numbered pagination are present.
+- Confirmed modal uses reference-style SAVE / Calculate EMI / CANCEL action row and cyan header styling.
+- NOT RUN: Vite production build, Docker build, browser screenshot comparison, live API field mapping verification.

@@ -1,0 +1,3 @@
+statement_date,description,reference,debit,credit,statement_balance
+2026-10-01,Collection receipt,UTR-EXAMPLE-001,0.00,1000.00,11000.00
+2026-10-02,Bank charge,UTR-EXAMPLE-002,25.00,0.00,10975.00

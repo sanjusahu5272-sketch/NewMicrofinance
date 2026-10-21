@@ -1,0 +1,7 @@
+V77 SOURCE / ARCHIVE CHECKS
+- ZIP integrity: checked after packaging.
+- Source assertions: Role List search, status filter, filtered/paginated account table, previous/next controls are present.
+- Frontend build: NOT RUN.
+- Django checks/tests/migrations: NOT RUN.
+- Screenshot comparison: NOT RUN.
+- Custom role database CRUD remains outstanding.

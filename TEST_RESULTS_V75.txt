@@ -1,0 +1,8 @@
+V75 SOURCE / ARCHIVE CHECKS
+- Base V74 archive: integrity verified before edits.
+- ZIP integrity: checked after packaging.
+- Source assertions: Member List/New Member routes present; New Member form and Member List table are conditionally separated; navigation includes separate KYC page.
+- Frontend production build: NOT RUN (Vite executable/dependencies unavailable in previous environment check).
+- Django checks/tests/migrations: NOT RUN (Django missing in previous environment check).
+- Visual screenshot comparison: NOT RUN automatically. Confirm exact visual parity on PC using the supplied screenshots.
+- Loan Case source assertions: Designation, Staff Type, Select Type, ADV EMI, Dues, Advance and Prev Status columns present.

@@ -1,0 +1,7 @@
+V74 TEST RESULTS
+1. ZIP integrity: PASS (zipfile.testzip returned no errors; 152 entries before adding this report).
+2. Dynamic bank option source check: PASS. Loan Summary loads /master-catalog/?master_key=bank, filters inactive bank rows, and builds one eNACH option per active bank name. Hard-coded HDFC option removed.
+3. Frontend production build: NOT RUN SUCCESSFULLY. `npm run build` attempted; the extracted project does not contain `frontend/node_modules/.bin/vite` (the earlier attempt reported `vite: Permission denied`, then verified vite executable is absent). Dependencies cannot be installed in this offline execution environment.
+4. Django tests: BLOCKED. `python manage.py test` attempted, but Django is not installed in the execution environment (`ModuleNotFoundError: No module named 'django'`). No Django test results can be claimed.
+5. Live bank/eNACH integration: NOT tested. Selecting a bank only identifies the configured bank in the UI and explains that a provider integration is required; it does not create a live mandate.
+Conclusion: ZIP/source checks pass, but frontend build and Django test suite remain unverified. Do not treat this ZIP as production-certified.

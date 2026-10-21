@@ -1,0 +1,6 @@
+V81 SOURCE CHECKS
+- ZIP integrity verified.
+- Python AST syntax checks passed for changed Python modules and tests.
+- Django tests NOT RUN.
+- Frontend build NOT RUN.
+- Settlement payment posting/discount write-off/loan closure NOT implemented in this increment.
