@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "echo 'Static deployment - no build needed'",
+  "outputDirectory": "dist",
+  "framework": null,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://neev-mfi-api.vercel.app/api/:match*",
+      "permanent": false
+    }
+  ]
+}
