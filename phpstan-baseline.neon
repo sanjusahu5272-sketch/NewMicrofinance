@@ -1,0 +1,79 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Http/Controllers/Api/ExportController.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 2
+			path: app/Http/Controllers/Api/MemberKycController.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between Illuminate\\Http\\Request and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: app/Models/Scopes/TenantScope.php
+
+		-
+			message: '#^Offset ''due_date'' on array\{emi_no\: int\<1, max\>, due_date\: non\-falsy\-string, day_name\: ''Friday''\|''Monday''\|''Saturday''\|''Sunday''\|''Thursday''\|''Tuesday''\|''Wednesday'', days_in_period\: int\<1, max\>, opening_principal\: string, principal_component\: string, interest_component\: string, emi_amount\: string, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Services/ActuarialLoanEngine.php
+
+		-
+			message: '#^Offset ''day_offset'' on array\{day_offset\: int, amount\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: app/Services/BcMathCalculator.php
+
+		-
+			message: '#^Anonymous function has an unused use \$actorCode\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: app/Services/CollectionsNpaService.php
+
+		-
+			message: '#^Anonymous function has an unused use \$actorCode\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: app/Services/LoanWorkflowService.php
+
+		-
+			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
+			identifier: greater.alwaysTrue
+			count: 1
+			path: app/Services/LoanWorkflowService.php
+
+		-
+			message: '#^Property App\\Models\\Installment\:\:\$paid_amount \(float\) does not accept string\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Services/LoanWorkflowService.php
+
+		-
+			message: '#^Property App\\Models\\Installment\:\:\$penalty_paid \(float\) does not accept string\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Services/LoanWorkflowService.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 2
+			path: app/Services/PaymentGatewayService.php
+
+		-
+			message: '#^Offset ''outstanding'' on array\{dpd\: int, outstanding\: string, security_value\?\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 3
+			path: app/Services/RbiProvisioningEngine.php
+
+		-
+			message: '#^Comparison operation "\<" between int\<min, \-1\> and 0 is always true\.$#'
+			identifier: smaller.alwaysTrue
+			count: 1
+			path: app/Services/TreasuryReconciliationService.php

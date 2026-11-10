@@ -1,0 +1,13 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - app/
+        - routes/
+        - database/
+    excludePaths:
+        - app/Http/Controllers/Api/ResourceController.php
+    tmpDir: bootstrap/cache/phpstan

@@ -1,0 +1,205 @@
+{
+  "generated_by": "tools/gen_oracle_cases.py",
+  "cases": [
+    {
+      "name": "base-18pct-12m-3paid",
+      "plan_amount": "100000.00",
+      "interest_rate_pa": "18.00",
+      "tenure_emis": 12,
+      "start_date": "2026-01-01",
+      "paid_emis": 3,
+      "settlement_date": "2026-05-10",
+      "charge_pct": "3.00",
+      "expected": {
+        "principal_outstanding": "76649.21",
+        "broken_period_days": "39",
+        "broken_period_interest": "1474.18",
+        "accrued_scheduled_interest": "1149.74",
+        "interest_due": "2623.92",
+        "foreclosure_charge": "2299.48",
+        "gst_on_charge": "413.91",
+        "total_payable": "81986.52"
+      }
+    },
+    {
+      "name": "high-24pct-24m-6paid",
+      "plan_amount": "250000.00",
+      "interest_rate_pa": "24.00",
+      "tenure_emis": 24,
+      "start_date": "2026-01-01",
+      "paid_emis": 6,
+      "settlement_date": "2026-09-15",
+      "charge_pct": "2.00",
+      "expected": {
+        "principal_outstanding": "198161.31",
+        "broken_period_days": "77",
+        "broken_period_interest": "10032.93",
+        "accrued_scheduled_interest": "7741.37",
+        "interest_due": "17774.30",
+        "foreclosure_charge": "3963.23",
+        "gst_on_charge": "713.38",
+        "total_payable": "220612.22"
+      }
+    },
+    {
+      "name": "low-12pct-6m-1paid",
+      "plan_amount": "25000.00",
+      "interest_rate_pa": "12.00",
+      "tenure_emis": 6,
+      "start_date": "2026-01-01",
+      "paid_emis": 1,
+      "settlement_date": "2026-03-20",
+      "charge_pct": "4.00",
+      "expected": {
+        "principal_outstanding": "20936.29",
+        "broken_period_days": "48",
+        "broken_period_interest": "330.39",
+        "accrued_scheduled_interest": "209.36",
+        "interest_due": "539.75",
+        "foreclosure_charge": "837.45",
+        "gst_on_charge": "150.74",
+        "total_payable": "22464.23"
+      }
+    },
+    {
+      "name": "zero-rate-12m-4paid",
+      "plan_amount": "60000.00",
+      "interest_rate_pa": "0.00",
+      "tenure_emis": 12,
+      "start_date": "2026-01-01",
+      "paid_emis": 4,
+      "settlement_date": "2026-06-05",
+      "charge_pct": "1.00",
+      "expected": {
+        "principal_outstanding": "40000.00",
+        "broken_period_days": "35",
+        "broken_period_interest": "0.00",
+        "accrued_scheduled_interest": "0.00",
+        "interest_due": "0.00",
+        "foreclosure_charge": "400.00",
+        "gst_on_charge": "72.00",
+        "total_payable": "40472.00"
+      }
+    },
+    {
+      "name": "small-5000-3m-0paid",
+      "plan_amount": "5000.00",
+      "interest_rate_pa": "20.00",
+      "tenure_emis": 3,
+      "start_date": "2026-01-01",
+      "paid_emis": 0,
+      "settlement_date": "2026-02-15",
+      "charge_pct": "3.00",
+      "expected": {
+        "principal_outstanding": "5000.00",
+        "broken_period_days": "45",
+        "broken_period_interest": "123.29",
+        "accrued_scheduled_interest": "83.33",
+        "interest_due": "206.62",
+        "foreclosure_charge": "150.00",
+        "gst_on_charge": "27.00",
+        "total_payable": "5383.62"
+      }
+    },
+    {
+      "name": "big-10L-36m-12paid",
+      "plan_amount": "1000000.00",
+      "interest_rate_pa": "16.00",
+      "tenure_emis": 36,
+      "start_date": "2026-01-01",
+      "paid_emis": 12,
+      "settlement_date": "2027-06-20",
+      "charge_pct": "1.50",
+      "expected": {
+        "principal_outstanding": "718031.06",
+        "broken_period_days": "175",
+        "broken_period_interest": "55081.83",
+        "accrued_scheduled_interest": "44411.85",
+        "interest_due": "99493.68",
+        "foreclosure_charge": "10770.47",
+        "gst_on_charge": "1938.68",
+        "total_payable": "830233.89"
+      }
+    },
+    {
+      "name": "high36-12m-11paid",
+      "plan_amount": "150000.00",
+      "interest_rate_pa": "36.00",
+      "tenure_emis": 12,
+      "start_date": "2026-01-01",
+      "paid_emis": 11,
+      "settlement_date": "2026-12-20",
+      "charge_pct": "5.00",
+      "expected": {
+        "principal_outstanding": "14630.43",
+        "broken_period_days": "23",
+        "broken_period_interest": "331.89",
+        "accrued_scheduled_interest": "0.00",
+        "interest_due": "331.89",
+        "foreclosure_charge": "731.52",
+        "gst_on_charge": "131.67",
+        "total_payable": "15825.51"
+      }
+    },
+    {
+      "name": "last-emi-settle",
+      "plan_amount": "80000.00",
+      "interest_rate_pa": "22.00",
+      "tenure_emis": 9,
+      "start_date": "2026-01-01",
+      "paid_emis": 8,
+      "settlement_date": "2026-09-25",
+      "charge_pct": "3.00",
+      "expected": {
+        "principal_outstanding": "9548.40",
+        "broken_period_days": "27",
+        "broken_period_interest": "155.39",
+        "accrued_scheduled_interest": "0.00",
+        "interest_due": "155.39",
+        "foreclosure_charge": "286.45",
+        "gst_on_charge": "51.56",
+        "total_payable": "10041.80"
+      }
+    },
+    {
+      "name": "day0-no-payments",
+      "plan_amount": "120000.00",
+      "interest_rate_pa": "18.00",
+      "tenure_emis": 12,
+      "start_date": "2026-01-01",
+      "paid_emis": 0,
+      "settlement_date": "2026-01-01",
+      "charge_pct": "3.00",
+      "expected": {
+        "principal_outstanding": "120000.00",
+        "broken_period_days": "0",
+        "broken_period_interest": "0.00",
+        "accrued_scheduled_interest": "0.00",
+        "interest_due": "0.00",
+        "foreclosure_charge": "3600.00",
+        "gst_on_charge": "648.00",
+        "total_payable": "124248.00"
+      }
+    },
+    {
+      "name": "mid-cycle-2paid",
+      "plan_amount": "75000.00",
+      "interest_rate_pa": "21.00",
+      "tenure_emis": 18,
+      "start_date": "2026-01-01",
+      "paid_emis": 2,
+      "settlement_date": "2026-04-11",
+      "charge_pct": "2.50",
+      "expected": {
+        "principal_outstanding": "67775.59",
+        "broken_period_days": "40",
+        "broken_period_interest": "1559.77",
+        "accrued_scheduled_interest": "1186.07",
+        "interest_due": "2745.84",
+        "foreclosure_charge": "1694.39",
+        "gst_on_charge": "304.99",
+        "total_payable": "72520.81"
+      }
+    }
+  ]
+}

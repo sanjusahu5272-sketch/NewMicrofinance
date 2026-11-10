@@ -1,0 +1,23 @@
+{
+  "name": "neev-microfinance-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Independent React + Vite Frontend for NEEV_MICROFINANCE_CLONE (MicroMuneem Replication)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "node build_bundle.js",
+    "vite:build": "vite build",
+    "preview": "vite preview --port 5173"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.1.4"
+  }
+}

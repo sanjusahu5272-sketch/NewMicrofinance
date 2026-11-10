@@ -1,0 +1,13 @@
+/vendor/
+/node_modules/
+/storage/logs/*
+/storage/framework/*
+/.env
+/.env.backup
+/.phpunit.result.cache
+/home/user/.cache
+/.git/
+*.log
+*.orig
+*.pre2fa
+*.bak
