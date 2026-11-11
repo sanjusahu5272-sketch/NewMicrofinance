@@ -116,7 +116,7 @@ class DoubleEntryLedgerService
                 );
             }
 
-            $seq = DB::table('mfi_vouchers')->lockForUpdate()->count() + 90001;
+            $seq = DB::table('mfi_vouchers')->count() + 90001;
             $voucherNo = !empty($data['voucher_no']) ? (string) $data['voucher_no'] : "VCH{$seq}";
             $vDate = substr((string) ($data['voucher_date'] ?? date('Y-m-d')), 0, 10);
 

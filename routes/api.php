@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TwoFactorController;
+use App\Http\Controllers\Api\AgentController;
+use App\Http\Controllers\Api\UpiMandateController;
 use App\Http\Controllers\Api\LoanController;
+use App\Http\Controllers\Api\CreditScoreController;
 use App\Http\Controllers\Api\ExportController;
+use App\Http\Controllers\Api\GuarantorController;
 use App\Http\Controllers\Api\ImportController;
 use App\Http\Controllers\Api\SystemHealthController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PayrollController;
 use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\Api\IntegrationHubController;
 use App\Http\Controllers\Api\MemberKycController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ResourceController;
 use App\Http\Middleware\TenantScopeMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -128,6 +135,53 @@ Route::middleware([TenantScopeMiddleware::class, \App\Http\Middleware\RequireAut
     Route::post('/loan-topups', [LoanController::class, 'createLoanTopup']);
     Route::post('/loan-topups/{id}/decision', [LoanController::class, 'decideLoanTopup']);
     Route::delete('/loan-topups/{id}', [LoanController::class, 'deleteLoanTopup']);
+
+    // Field agent app API (Feature 7)
+    Route::get('/agent/context', [AgentController::class, 'context']);
+    Route::get('/agent/loans', [AgentController::class, 'loans']);
+    Route::get('/agent/tasks', [AgentController::class, 'tasks']);
+    Route::get('/agent/collections', [AgentController::class, 'collections']);
+    Route::post('/agent/collections', [AgentController::class, 'collect']);
+
+    // UPI mandates / auto-collection (Feature 6)
+    Route::post('/upi-mandates/create', [UpiMandateController::class, 'create']);
+    Route::get('/upi-mandates', [UpiMandateController::class, 'index']);
+    Route::post('/upi-mandates/{id}/pause', [UpiMandateController::class, 'pause']);
+    Route::post('/upi-mandates/{id}/resume', [UpiMandateController::class, 'resume']);
+    Route::post('/upi-mandates/{id}/cancel', [UpiMandateController::class, 'cancel']);
+    Route::post('/upi-mandates/{id}/debit', [UpiMandateController::class, 'debit']);
+
+    // Salary / payroll (Feature 5)
+    Route::post('/payroll/run', [PayrollController::class, 'run']);
+    Route::get('/payroll', [PayrollController::class, 'index']);
+    Route::get('/payroll/employee/{employeeId}', [PayrollController::class, 'employeeHistory']);
+    Route::post('/payroll/{id}/pay', [PayrollController::class, 'pay']);
+
+    // Employee attendance (Feature 4)
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
+    Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut']);
+    Route::post('/attendance/mark-absent', [AttendanceController::class, 'markAbsent']);
+    Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::get('/attendance/summary', [AttendanceController::class, 'summary']);
+
+    // SMS / email gateway + OTP (Feature 3)
+    Route::post('/messages/send', [MessageController::class, 'send']);
+    Route::post('/messages/otp/send', [MessageController::class, 'sendOtp']);
+    Route::post('/messages/otp/verify', [MessageController::class, 'verifyOtp']);
+    Route::get('/messages/logs', [MessageController::class, 'logs']);
+
+    // Credit score / risk rating (Feature 2)
+    Route::post('/credit-scores/compute', [CreditScoreController::class, 'compute']);
+    Route::get('/credit-scores/member/{memberId}', [CreditScoreController::class, 'latestForMember']);
+    Route::get('/credit-scores/member/{memberId}/history', [CreditScoreController::class, 'history']);
+    Route::post('/credit-scores/member/{memberId}/override', [CreditScoreController::class, 'override']);
+
+    // Guarantor management (Feature 1)
+    Route::get('/loans/{loanPk}/guarantors', [GuarantorController::class, 'forLoan']);
+    Route::post('/loans/{loanPk}/guarantors', [GuarantorController::class, 'store']);
+    Route::get('/guarantors/{id}', [GuarantorController::class, 'show']);
+    Route::patch('/guarantors/{id}', [GuarantorController::class, 'update']);
+    Route::delete('/guarantors/{id}', [GuarantorController::class, 'destroy']);
 
     Route::post('/emis/collect', [LoanController::class, 'collectEmi']);
     Route::post('/emis/assess-penalties', [LoanController::class, 'assessPenalties']);

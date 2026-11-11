@@ -162,7 +162,7 @@ class LoanWorkflowService
                 }
             }
 
-            $seq = DB::table('mfi_loans')->lockForUpdate()->count() + 3001;
+            $seq = DB::table('mfi_loans')->count() + 3001;
             $appNo = "APP{$seq}";
 
             return Loan::create([
@@ -512,7 +512,7 @@ class LoanWorkflowService
                 $prinAlloc = BcMathCalculator::add($prinAlloc, $rem, BcMathCalculator::LEDGER_SCALE);
             }
 
-            $seq = DB::table('mfi_emi_collections')->lockForUpdate()->count() + 2026101;
+            $seq = DB::table('mfi_emi_collections')->count() + 2026101;
             $receiptNo = "RCPT{$seq}";
 
             $collection = EmiCollection::create([
