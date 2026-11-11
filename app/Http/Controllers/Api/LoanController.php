@@ -617,14 +617,17 @@ class LoanController
                 'tenant_code' => $loan->tenant_code,
                 'voucher_no' => $voucherNo,
                 'voucher_date' => $quote['settlement_date'],
-                'loan_id' => $loan->loan_id,
-                'member_code' => $loan->member_code,
+                'voucher_type' => 'SETTLEMENT',
                 'branch_name' => $loan->branch_name,
+                'loan_id' => $loan->loan_id,
+                'particular' => 'Loan settlement — '.$loan->loan_id,
                 'debit_ledger' => 'Settlement Collectible',
-                'debit_amount' => $quote['voucher']['debit_total'],
+                'amount_dr' => $quote['voucher']['debit_total'],
                 'credit_ledger' => 'Loan Account',
-                'credit_amount' => $quote['voucher']['credit_total'],
+                'amount_cr' => $quote['voucher']['credit_total'],
                 'narration' => 'Loan settlement — '.$loan->loan_id,
+                'is_reversed' => false,
+                'idempotency_key' => $idem ?: null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -902,7 +905,21 @@ class LoanController
     {
         $tenant = (string) $request->attributes->get('tenant_code', config('mfi.default_tenant', 'TNT-NEEV-01'));
         $memCode = trim((string) $request->input('member_code', ''));
-        $member = Member::where('member_code', $memCode)->orWhere('id', is_numeric($memCode) ? (int) $memCode : 0)->firstOrFail();
+        if ($memCode === '') {
+            // Resolve member from loan_id when member_code is not supplied
+            $loanRef = trim((string) $request->input('loan_id', ''));
+            $liveLoan = Loan::where(function ($q) use ($loanRef): void {
+                $q->where('loan_id', $loanRef)
+                    ->orWhere('id', is_numeric($loanRef) ? (int) $loanRef : 0)
+                    ->orWhere('application_no', $loanRef);
+            })->where('status', 'DISBURSED')->orderByDesc('id')->first();
+            if (!$liveLoan) {
+                throw new InvalidArgumentException('No disbursed loan found for loan_id "' . $loanRef . '".');
+            }
+            $member = Member::findOrFail((int) $liveLoan->member_id);
+        } else {
+            $member = Member::where('member_code', $memCode)->orWhere('id', is_numeric($memCode) ? (int) $memCode : 0)->firstOrFail();
+        }
 
         $liveLoan = Loan::where(function ($q) use ($member): void {
             $q->where('member_id', $member->id)->orWhere('member_code', $member->member_code);

@@ -89,6 +89,8 @@ class SystemHealthController extends \Illuminate\Routing\Controller
     {
         $free = disk_free_space(base_path());
         $total = disk_total_space(base_path());
+        $free = $free === false ? 0 : (float) $free;
+        $total = $total === false ? 1 : (float) $total;
         $pct = round(($free / $total) * 100, 2);
         return [
             'status' => $pct > 10 ? 'healthy' : 'warning',
@@ -101,9 +103,21 @@ class SystemHealthController extends \Illuminate\Routing\Controller
     private function checkMemory(): array
     {
         $mem = memory_get_usage(true);
+        $limit = (string) (ini_get('memory_limit') ?: '128M');
+        // Convert "128M" / "512K" / "-1" (unlimited) to megabytes
+        $limitMb = 128.0;
+        if (strtoupper($limit) !== '-1') {
+            $num = (float) preg_replace('/[^0-9.]/', '', $limit);
+            $unit = strtoupper(preg_replace('/[0-9.]/', '', $limit));
+            $limitMb = match ($unit) {
+                'G' => $num * 1024,
+                'K' => $num / 1024,
+                default => $num,
+            };
+        }
         return [
             'usage_mb' => round($mem / 1048576, 2),
-            'limit_mb' => round(ini_get('memory_limit') ?: 128, 2),
+            'limit_mb' => round($limitMb, 2),
         ];
     }
 }
