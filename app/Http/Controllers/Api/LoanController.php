@@ -17,9 +17,11 @@ use App\Services\ActuarialLoanEngine;
 use App\Services\BcMathCalculator;
 use App\Services\CollectionsNpaService;
 use App\Services\LoanWorkflowService;
+use App\Services\UpiMandateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class LoanController
 {
@@ -149,6 +151,40 @@ class LoanController
 
         $loan = $this->loanWorkflow->disburseLoan($id, $payload, $actor);
 
+        // ── AutoPay / eNACH mandate setup at disbursement ──
+        // Optional payload: mandate = {mandate_type, frequency, mandate_amount, upi_id, bank_name, account_no}
+        $mandatePayload = $request->input('mandate');
+        $mandateResult = null;
+        if (is_array($mandatePayload) && $mandatePayload !== []) {
+            try {
+                $mandateResult = UpiMandateService::createAtDisbursement($loan, $mandatePayload);
+            } catch (Throwable $e) {
+                // Disbursement already succeeded; mandate setup failure is reported
+                // but does not roll back the disbursement.
+                $mandateResult = ['error' => $e->getMessage()];
+            }
+        }
+
+        if ($mandateResult !== null) {
+            if (isset($mandateResult['error'])) {
+                return response()->json([
+                    'loan' => $loan,
+                    'mandate_error' => $mandateResult['error'],
+                    'message' => 'Disbursement done, but mandate setup failed.',
+                ], 201);
+            }
+
+            $otp = (string) ($mandateResult['otp'] ?? '');
+            return response()->json([
+                'loan' => $loan,
+                'mandate' => $mandateResult['mandate'],
+                'message' => 'Disbursement done and mandate created. Consent OTP sent to member.',
+                $otp !== '' ? 'otp' : 'otp_note' => $otp !== ''
+                    ? "Local dev: OTP is $otp."
+                    : 'OTP delivered via SMS gateway only.',
+            ], 201);
+        }
+
         return response()->json($loan);
     }
 
@@ -183,6 +219,23 @@ class LoanController
             'head_office_ledgers' => $ledgers,
             'can_disburse' => $canDisb,
             'blockers' => $canDisb ? [] : ["Loan status is {$stUp}"],
+            // Mandate options for the disbursement task button
+            'mandate_options' => [
+                'autopay' => [
+                    'label' => 'AutoPay (UPI auto-debit)',
+                    'mandate_type' => 'AUTOPAY',
+                    'frequency' => ['MONTHLY', 'WEEKLY'],
+                    'requires' => ['upi_id', 'bank_name', 'account_no'],
+                    'consent_flow' => 'otp',
+                ],
+                'enanch' => [
+                    'label' => 'eNACH (bank auto-debit mandate)',
+                    'mandate_type' => 'ENACH',
+                    'frequency' => ['MONTHLY', 'WEEKLY'],
+                    'requires' => ['bank_name', 'account_no'],
+                    'consent_flow' => 'otp',
+                ],
+            ],
         ]);
     }
 

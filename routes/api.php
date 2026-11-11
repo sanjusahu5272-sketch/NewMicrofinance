@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AgentController;
 use App\Http\Controllers\Api\UpiMandateController;
 use App\Http\Controllers\Api\LoanController;
 use App\Http\Controllers\Api\CreditScoreController;
+use App\Http\Controllers\Api\EnachWebhookController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\GuarantorController;
 use App\Http\Controllers\Api\ImportController;
@@ -36,6 +37,7 @@ Route::middleware([TenantScopeMiddleware::class])->group(function (): void {
     Route::get('/health', [AuthController::class, 'health']);
     Route::post('/webhooks/razorpay', [WebhookController::class, 'razorpay']);
     Route::post('/webhooks/cashfree', [WebhookController::class, 'cashfree']);
+    Route::post('/webhooks/enanch', [EnachWebhookController::class, 'receive']);
     Route::get('/health/detailed', [SystemHealthController::class, 'detailed']);
     Route::get('/export/loans', [ExportController::class, 'loans']);
     Route::get('/export/members', [ExportController::class, 'members']);
@@ -143,9 +145,13 @@ Route::middleware([TenantScopeMiddleware::class, \App\Http\Middleware\RequireAut
     Route::get('/agent/collections', [AgentController::class, 'collections']);
     Route::post('/agent/collections', [AgentController::class, 'collect']);
 
-    // UPI mandates / auto-collection (Feature 6)
+    // UPI mandates / auto-collection + AutoPay/eNACH consent (Feature 6+)
+    Route::post('/loans/{loanId}/mandate', [UpiMandateController::class, 'createAtDisbursement']);
     Route::post('/upi-mandates/create', [UpiMandateController::class, 'create']);
     Route::get('/upi-mandates', [UpiMandateController::class, 'index']);
+    Route::post('/upi-mandates/{id}/otp/send', [UpiMandateController::class, 'sendConsentOtp']);
+    Route::post('/upi-mandates/{id}/consent/verify', [UpiMandateController::class, 'verifyConsent']);
+    Route::post('/upi-mandates/{id}/approve', [UpiMandateController::class, 'approve']);
     Route::post('/upi-mandates/{id}/pause', [UpiMandateController::class, 'pause']);
     Route::post('/upi-mandates/{id}/resume', [UpiMandateController::class, 'resume']);
     Route::post('/upi-mandates/{id}/cancel', [UpiMandateController::class, 'cancel']);
