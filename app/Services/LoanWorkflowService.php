@@ -135,6 +135,8 @@ class LoanWorkflowService
                 'insurance_amount' => (string) $plan->insurance_amount,
                 'gst_include' => (string) $plan->gst_include,
                 'holiday_exclude' => (string) $plan->holiday_exclude,
+                'custom_days' => (int) $plan->custom_days,
+                'custom_emi_amount' => (string) $plan->custom_emi_amount,
             ]);
 
             // RBI Microfinance FOIR Guard (Total EMI obligations <= 50% of Monthly Household Income) in pure BCMath
@@ -191,6 +193,8 @@ class LoanWorkflowService
                 'emi_amount' => $calc['emi_amount'],
                 'tenure_emis' => $calc['tenure_emis'],
                 'recovery_type' => $calc['recovery_type'],
+                'custom_days' => (int) $plan->custom_days,
+                'custom_emi_amount' => (string) $plan->custom_emi_amount,
                 'interest_type' => $calc['interest_type'],
                 'interest_rate_pa' => (string) $plan->interest_rate_pa,
                 'effective_apr_pct' => $calc['effective_apr_pct'],
@@ -289,6 +293,8 @@ class LoanWorkflowService
                 'recovery_type' => (string) $loan->recovery_type,
                 'interest_type' => (string) $loan->interest_type,
                 'start_date' => (string) ($payload['emi_start_date'] ?? $disbDate),
+                'custom_days' => (int) ($loan->custom_days ?? 0),
+                'custom_emi_amount' => (string) ($loan->custom_emi_amount ?? ''),
             ]);
 
             Installment::where('loan_pk', $loan->id)->delete();

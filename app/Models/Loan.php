@@ -42,6 +42,8 @@ class Loan extends Model
         'emi_amount',
         'tenure_emis',
         'recovery_type',
+        'custom_days',
+        'custom_emi_amount',
         'interest_type',
         'interest_rate_pa',
         'effective_apr_pct',

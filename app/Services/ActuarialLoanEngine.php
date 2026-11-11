@@ -30,6 +30,7 @@ class ActuarialLoanEngine
         $planType = strtoupper(trim((string) ($input['plan_type'] ?? 'NORMAL PLAN')));
         $holidayExclude = in_array(strtoupper((string) ($input['holiday_exclude'] ?? 'NO')), ['YES', 'TRUE', '1'], true);
         $customDays = max(1, (int) ($input['custom_days'] ?? 5));
+        $customEmi = BcMathCalculator::money((string) ($input['custom_emi_amount'] ?? '0.00'));
 
         if (BcMathCalculator::comp($principal, '0.00') <= 0) {
             throw new InvalidArgumentException('Plan amount must be greater than zero.');
@@ -129,6 +130,18 @@ class ActuarialLoanEngine
                 BcMathCalculator::LEDGER_SCALE
             );
             $totalFlatRepay = BcMathCalculator::add($principal, $totIntFlat, BcMathCalculator::LEDGER_SCALE);
+
+            // Custom EMI override: when the plan specifies custom_emi_amount,
+            // the flat repayment IS EMI × tenure. Interest is backed out as
+            // (total − principal), which keeps SUM(principal) === plan_amount
+            // and SUM(interest) === total − principal to the paise.
+            if (BcMathCalculator::comp($customEmi, '0.00') > 0) {
+                $totalFlatRepay = BcMathCalculator::mul($customEmi, $nStr, BcMathCalculator::LEDGER_SCALE);
+                $totIntFlat = BcMathCalculator::max(
+                    '0.00',
+                    BcMathCalculator::sub($totalFlatRepay, $principal, BcMathCalculator::LEDGER_SCALE)
+                );
+            }
             // BUG-003 fix: the old code rounded the per-installment EMI and then
             // re-derived interest as (emi − principal), which drifted the TOTAL
             // flat interest off the contractual P×r×t figure (₹4,499.98 instead
