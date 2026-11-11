@@ -621,6 +621,7 @@ class LoanController
             'disbursement_date' => (string) $loan->disbursement_date,
             'installment_amounts' => $installmentAmounts,
             'waiver' => (array) $request->query('waiver', []),
+            'write_off' => (bool) $request->query('write_off', false),
         ];
     }
 
