@@ -1028,25 +1028,74 @@ class LoanController
 
     public function reverseDisbursement(Request $request, string $id): JsonResponse
     {
-        $loan = Loan::where('id', is_numeric($id) ? (int) $id : 0)
-            ->orWhere('loan_id', $id)
-            ->orWhere('application_no', $id)
-            ->firstOrFail();
+        return DB::transaction(function () use ($request, $id): JsonResponse {
+            $loan = Loan::where('id', is_numeric($id) ? (int) $id : 0)
+                ->orWhere('loan_id', $id)
+                ->orWhere('application_no', $id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        Installment::where('loan_pk', $loan->id)->delete();
-        $loan->update([
-            'status' => 'APPROVED',
-            'disbursement_date' => null,
-            'principal_outstanding' => '0.00',
-            'interest_outstanding' => '0.00',
-            'total_outstanding' => '0.00',
-        ]);
+            if ($loan->status !== 'DISBURSED') {
+                return response()->json([
+                    'error' => "Loan {$loan->loan_id} is not DISBURSED (status: {$loan->status}). Only disbursed loans can be reversed.",
+                ], 422);
+            }
 
-        return response()->json([
-            'loan_id' => $loan->loan_id,
-            'status' => 'APPROVED',
-            'reversed_vouchers_count' => 2,
-        ]);
+            // ── Reverse the disbursement voucher (double-entry balance) ──
+            // Find the original disbursement voucher posted by disburseLoan
+            $vouchers = DB::table('mfi_vouchers')
+                ->where('loan_id', $loan->loan_id)
+                ->where('voucher_type', 'PAYMENT')
+                ->where('is_reversed', false)
+                ->get();
+
+            $reversedCount = 0;
+            foreach ($vouchers as $vch) {
+                // Post the reversal voucher
+                $revNo = $vch->voucher_no . '-REV';
+                DB::table('mfi_vouchers')->insert([
+                    'tenant_code' => $loan->tenant_code,
+                    'voucher_no' => $revNo,
+                    'voucher_date' => date('Y-m-d'),
+                    'voucher_type' => 'REVERSAL',
+                    'branch_name' => $loan->branch_name,
+                    'loan_id' => $loan->loan_id,
+                    'particular' => "Reversal of {$vch->voucher_no} — loan disbursement reversed",
+                    'debit_ledger' => $vch->credit_ledger,
+                    'credit_ledger' => $vch->debit_ledger,
+                    'amount_dr' => $vch->amount_dr,
+                    'amount_cr' => $vch->amount_cr,
+                    'narration' => "Loan disbursement reversed — {$loan->loan_id}",
+                    'created_by' => (string) ($request->attributes->get('auth_user', ['user_code' => 'ADM01'])['user_code'] ?? 'ADM01'),
+                    'is_reversed' => false,
+                    'reversal_of' => $vch->voucher_no,
+                    'idempotency_key' => "REVDISB-{$loan->loan_id}-{$vch->voucher_no}",
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                // Mark original as reversed
+                DB::table('mfi_vouchers')->where('id', $vch->id)->update([
+                    'is_reversed' => true,
+                    'updated_at' => now(),
+                ]);
+                $reversedCount++;
+            }
+
+            Installment::where('loan_pk', $loan->id)->delete();
+            $loan->update([
+                'status' => 'APPROVED',
+                'disbursement_date' => null,
+                'principal_outstanding' => '0.00',
+                'interest_outstanding' => '0.00',
+                'total_outstanding' => '0.00',
+            ]);
+
+            return response()->json([
+                'loan_id' => $loan->loan_id,
+                'status' => 'APPROVED',
+                'reversed_vouchers_count' => $reversedCount,
+            ]);
+        });
     }
 
     public function partPrepay(Request $request, string $id): JsonResponse
